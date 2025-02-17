@@ -11,9 +11,11 @@ import (
 	"strings"
 	"sync/atomic"
 	"syscall"
+	"time"
 
 	"github.com/blockscout/scoutup/config"
 	"github.com/blockscout/scoutup/utils"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/log"
 )
 
@@ -61,6 +63,8 @@ func (i *Instance) Start(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+
+	go i.verifyL2InteropContracts()
 
 	return nil
 }
@@ -167,4 +171,58 @@ func (i *Instance) runDockerCompose(ctx context.Context) error {
 	}()
 
 	return nil
+}
+
+func (i *Instance) verifyL2InteropContracts() {
+	if i.config.OPConfig == nil {
+		// the instance corresponds to L1 chain
+		return
+	}
+
+	// we have to wait as for now blockscout has 2 minutes pause
+	// before fetching the genesis file (plus, provide some time for containers to start)
+	time.Sleep(140 * time.Second)
+
+	i.log.Info("Verifying predeployed interop contracts", "chain", i.config.Name)
+
+	interopProxies := map[string]common.Address{
+		"CrossL2Inbox":               common.HexToAddress("0x4200000000000000000000000000000000000022"),
+		"L2ToL2CrossDomainMessenger": common.HexToAddress("0x4200000000000000000000000000000000000023"),
+		"SuperchainWETH":             common.HexToAddress("0x4200000000000000000000000000000000000024"),
+		"SuperchainTokenBridge":      common.HexToAddress("0x4200000000000000000000000000000000000028"),
+	}
+
+	backendURL := fmt.Sprintf("http://127.0.0.1:%d", i.config.BackendPort)
+
+	interopImplementations := map[string][]common.Address{}
+	for name, proxy := range interopProxies {
+		implementations, err := utils.RetrieveProxyImplementationAddresses(backendURL, proxy)
+		if err != nil {
+			i.log.Error(
+				"Failed to retrieve proxy implementation address",
+				"chain", i.config.Name,
+				"name", name,
+				"err", err,
+			)
+			return
+		}
+		interopImplementations[name] = implementations
+	}
+
+	for name, implementations := range interopImplementations {
+		for _, implementation := range implementations {
+			i.log.Info("Verifying implementation", "chain", i.config.Name, "address", implementation)
+			// Should activate on-demand fetcher which retrieves sources from eth-bytecode-db
+			_, err := utils.GetSmartContract(backendURL, implementation)
+			if err != nil {
+				i.log.Error(
+					"Failed to verify interop contract",
+					"chain", i.config.Name,
+					"name", name,
+					"address", implementation,
+					"err", err,
+				)
+			}
+		}
+	}
 }
