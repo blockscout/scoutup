@@ -42,6 +42,10 @@ services:
     ports:
       - target: 4000
         published: ${BACKEND_PORT:-4000}
+    volumes:
+      - type: bind
+        source: ./genesis.json
+        target: /app/genesis.json
 
   frontend:
     depends_on:

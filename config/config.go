@@ -44,6 +44,9 @@ func (b *BlockscoutConfig) BackendEnvs() map[string]string {
 		envs["INDEXER_OPTIMISM_L2_BATCH_GENESIS_BLOCK_NUMBER"] = "0"
 		envs["INDEXER_OPTIMISM_L2_HOLOCENE_TIMESTAMP"] = "0"
 	}
+	if b.GenesisJSON != nil {
+		envs["CHAIN_SPEC_PATH"] = "/app/genesis.json"
+	}
 	return envs
 }
 

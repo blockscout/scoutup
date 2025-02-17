@@ -33,7 +33,7 @@ type Instance struct {
 }
 
 func NewInstance(log log.Logger, closeApp context.CancelCauseFunc, config *config.BlockscoutConfig, globalWorkspace string) (*Instance, error) {
-	workspace, err := createInstanceWorkspace(globalWorkspace)
+	workspace, err := createInstanceWorkspace(globalWorkspace, config.GenesisJSON)
 	if err != nil {
 		return nil, err
 	}

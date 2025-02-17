@@ -7,10 +7,11 @@ type OPConfig struct {
 }
 
 type ChainConfig struct {
-	Name       string
-	RPCUrl     string
-	FirstBlock uint64
-	OPConfig   *OPConfig
+	Name        string
+	RPCUrl      string
+	FirstBlock  uint64
+	OPConfig    *OPConfig
+	GenesisJSON *[]byte
 }
 
 func (n *ChainConfig) dockerRepo() string {

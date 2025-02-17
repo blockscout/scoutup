@@ -40,6 +40,7 @@ func PrepareSupersimConfig(admingRPCUrl string) (*NetworkConfig, error) {
 				L1RPCUrl:               fmt.Sprintf("http://host.docker.internal:%d", sc.L1Config.Port),
 				L1SystemConfigContract: chain.L2Config.L1Addresses.SystemConfigProxy.String(),
 			},
+			GenesisJSON: &chain.GenesisJSON,
 		}
 
 		if chain.ForkConfig != nil && chain.ForkConfig.BlockNumber > 0 {
