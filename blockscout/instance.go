@@ -179,12 +179,6 @@ func (i *Instance) verifyL2InteropContracts() {
 		return
 	}
 
-	// we have to wait as for now blockscout has 2 minutes pause
-	// before fetching the genesis file (plus, provide some time for containers to start)
-	time.Sleep(140 * time.Second)
-
-	i.log.Info("Verifying predeployed interop contracts", "chain", i.config.Name)
-
 	interopProxies := map[string]common.Address{
 		"CrossL2Inbox":               common.HexToAddress("0x4200000000000000000000000000000000000022"),
 		"L2ToL2CrossDomainMessenger": common.HexToAddress("0x4200000000000000000000000000000000000023"),
@@ -194,9 +188,16 @@ func (i *Instance) verifyL2InteropContracts() {
 
 	backendURL := fmt.Sprintf("http://127.0.0.1:%d", i.config.BackendPort)
 
+	// Wait for the backend instance to start
+	for !isHealthy(backendURL) {
+		time.Sleep(1 * time.Second)
+	}
+
+	i.log.Info("Verifying predeployed interop contracts", "chain", i.config.Name)
+
 	interopImplementations := map[string][]common.Address{}
 	for name, proxy := range interopProxies {
-		implementations, err := utils.RetrieveProxyImplementationAddresses(backendURL, proxy)
+		implementations, err := retrieveProxyImplementationAddresses(backendURL, proxy)
 		if err != nil {
 			i.log.Error(
 				"Failed to retrieve proxy implementation address",
@@ -211,9 +212,8 @@ func (i *Instance) verifyL2InteropContracts() {
 
 	for name, implementations := range interopImplementations {
 		for _, implementation := range implementations {
-			i.log.Info("Verifying implementation", "chain", i.config.Name, "address", implementation)
 			// Should activate on-demand fetcher which retrieves sources from eth-bytecode-db
-			_, err := utils.GetSmartContract(backendURL, implementation)
+			_, err := utils.MakeGetRequest(getSmartContractUrl(backendURL, implementation))
 			if err != nil {
 				i.log.Error(
 					"Failed to verify interop contract",

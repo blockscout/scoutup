@@ -46,6 +46,7 @@ func (b *BlockscoutConfig) BackendEnvs() map[string]string {
 	}
 	if b.GenesisJSON != nil {
 		envs["CHAIN_SPEC_PATH"] = "/app/genesis.json"
+		envs["CHAIN_SPEC_PROCESSING_DELAY"] = "0s"
 	}
 	return envs
 }
