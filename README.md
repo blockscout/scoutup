@@ -23,6 +23,17 @@ anvil --host 0.0.0.0
 3. The command above will run the local Blockscout instance with the default config using docker.
 
 ### Supersim
+0. **Important:** For predeployed contracts to be indexed correctly, 
+   ensure you have anvil (foundry) installed with a commit later or equal to [e5ec47b](https://github.com/foundry-rs/foundry/commit/e5ec47b88208fdc48575359e0a5c44f85570ef63).
+   Currently, latest stable release does not contain the commit. You can set it up by running either:
+    ```
+    foundryup --commit e5ec47b
+    ```
+   or (to install the latest master)
+    ```
+   foundryup --branch master
+    ```
+
 1. Run `supersim`:
 ```
 ./main --l1.host 0.0.0.0 --l2.host 0.0.0.0 --interop.autorelay true
