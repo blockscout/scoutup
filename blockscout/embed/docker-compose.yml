@@ -24,7 +24,7 @@ services:
   backend:
     depends_on:
       - db
-    image: blockscout/${DOCKER_REPO:-blockscout}:${DOCKER_TAG:-6.10.0}
+    image: blockscout/${DOCKER_REPO:-blockscout}:${DOCKER_TAG:-7.0.0}
     pull_policy: always
     restart: always
     stop_grace_period: 5m
