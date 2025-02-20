@@ -34,6 +34,14 @@ func (n *NetworkConfig) PrepareBlockscoutConfigs() []*BlockscoutConfig {
 					break
 				}
 			}
+
+			config.OtherL2InstanceConfigs = make(map[uint64]*InstanceConfig)
+			for _, bs := range configs {
+				if bs.OPConfig != nil {
+					config.OtherL2InstanceConfigs[bs.ChainID] = bs.InstanceConfig
+					bs.OtherL2InstanceConfigs[config.ChainID] = config.InstanceConfig
+				}
+			}
 		}
 
 		configs = append(configs, config)

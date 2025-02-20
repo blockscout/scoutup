@@ -1,6 +1,7 @@
 package config
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/blockscout/scoutup/utils"
@@ -16,6 +17,8 @@ type InstanceConfig struct {
 type BlockscoutConfig struct {
 	*ChainConfig
 	*InstanceConfig
+	// Maps (other than current) l2 chain ids to corresponding instance configs
+	OtherL2InstanceConfigs map[uint64]*InstanceConfig
 }
 
 func (b *BlockscoutConfig) DockerComposeEnvs() []string {
@@ -46,6 +49,13 @@ func (b *BlockscoutConfig) BackendEnvs() map[string]string {
 		envs["INDEXER_OPTIMISM_L1_SYSTEM_CONFIG_CONTRACT"] = b.OPConfig.L1SystemConfigContract
 		envs["INDEXER_OPTIMISM_L2_BATCH_GENESIS_BLOCK_NUMBER"] = "0"
 		envs["INDEXER_OPTIMISM_L2_HOLOCENE_TIMESTAMP"] = "0"
+
+		envs["CHAIN_TYPE"] = "optimism"
+
+		// interop image related envs
+		envs["INDEXER_OPTIMISM_L2_INTEROP_START_BLOCK"] = "0"
+		envs["INDEXER_OPTIMISM_INTEROP_PRIVATE_KEY"] = "0x5721810206e5e84fd05f9f0b9aa2d7544a3ea29674b24028d7a6a60d803a33a3"
+		envs["INDEXER_OPTIMISM_CHAINSCOUT_FALLBACK_MAP"] = b.buildChainscoutFallbackMapValue()
 	}
 	return envs
 }
@@ -64,4 +74,13 @@ func (b *BlockscoutConfig) FrontendEnvs() map[string]string {
 	}
 
 	return envs
+}
+
+func (b *BlockscoutConfig) buildChainscoutFallbackMapValue() string {
+	chainscoutFallbackMap := make(map[string]string)
+	for chainID, config := range b.OtherL2InstanceConfigs {
+		chainscoutFallbackMap[fmt.Sprintf("%v", chainID)] = fmt.Sprintf("http://host.docker.internal:%v", config.BackendPort)
+	}
+	jsonBytes, _ := json.Marshal(chainscoutFallbackMap)
+	return string(jsonBytes)
 }

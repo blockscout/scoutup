@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-
 	ssconfig "github.com/ethereum-optimism/supersim/config"
 	"github.com/ethereum/go-ethereum/rpc"
 )
@@ -16,6 +15,7 @@ func PrepareSupersimConfig(admingRPCUrl string) (*NetworkConfig, error) {
 	l1Config := &ChainConfig{
 		Name:        sc.L1Config.Name,
 		RPCUrl:      fmt.Sprintf("http://host.docker.internal:%d", sc.L1Config.Port),
+		ChainID:     sc.L1Config.ChainID,
 		GenesisJSON: sc.L1Config.GenesisJSON,
 	}
 	if sc.L1Config.ForkConfig != nil && sc.L1Config.ForkConfig.BlockNumber > 0 {
@@ -35,8 +35,9 @@ func PrepareSupersimConfig(admingRPCUrl string) (*NetworkConfig, error) {
 		}
 
 		l2Config := &ChainConfig{
-			Name:   chain.Name,
-			RPCUrl: fmt.Sprintf("http://host.docker.internal:%d", port),
+			Name:    chain.Name,
+			RPCUrl:  fmt.Sprintf("http://host.docker.internal:%d", port),
+			ChainID: chain.ChainID,
 			OPConfig: &OPConfig{
 				L1RPCUrl:               fmt.Sprintf("http://host.docker.internal:%d", sc.L1Config.Port),
 				L1SystemConfigContract: chain.L2Config.L1Addresses.SystemConfigProxy.String(),

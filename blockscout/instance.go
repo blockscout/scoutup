@@ -94,6 +94,7 @@ func (i *Instance) ConfigAsString() string {
 	fmt.Fprintf(&b, "         Logs:	    %v\n", path.Join(i.workspace, "logs"))
 	fmt.Fprintf(&b, "         First block: %v\n", i.config.FirstBlock)
 	fmt.Fprintf(&b, "         RPC: %v\n", i.config.RPCUrl)
+	fmt.Fprintf(&b, "         Chain ID: %v\n", i.config.ChainID)
 
 	if i.config.OPConfig != nil {
 		fmt.Fprintf(&b, "         Optimism L1 RPC: %v\n", i.config.OPConfig.L1RPCUrl)

@@ -10,8 +10,9 @@ type ChainConfig struct {
 	Name        string
 	RPCUrl      string
 	FirstBlock  uint64
-	OPConfig    *OPConfig
+	ChainID     uint64
 	GenesisJSON []byte
+	OPConfig    *OPConfig
 }
 
 func (n *ChainConfig) dockerRepo() string {
