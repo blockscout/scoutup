@@ -14,8 +14,9 @@ func PrepareSupersimConfig(admingRPCUrl string) (*NetworkConfig, error) {
 	}
 
 	l1Config := &ChainConfig{
-		Name:   sc.L1Config.Name,
-		RPCUrl: fmt.Sprintf("http://host.docker.internal:%d", sc.L1Config.Port),
+		Name:        sc.L1Config.Name,
+		RPCUrl:      fmt.Sprintf("http://host.docker.internal:%d", sc.L1Config.Port),
+		GenesisJSON: sc.L1Config.GenesisJSON,
 	}
 	if sc.L1Config.ForkConfig != nil && sc.L1Config.ForkConfig.BlockNumber > 0 {
 		l1Config.FirstBlock = sc.L1Config.ForkConfig.BlockNumber
@@ -40,7 +41,7 @@ func PrepareSupersimConfig(admingRPCUrl string) (*NetworkConfig, error) {
 				L1RPCUrl:               fmt.Sprintf("http://host.docker.internal:%d", sc.L1Config.Port),
 				L1SystemConfigContract: chain.L2Config.L1Addresses.SystemConfigProxy.String(),
 			},
-			GenesisJSON: &chain.GenesisJSON,
+			GenesisJSON: chain.GenesisJSON,
 		}
 
 		if chain.ForkConfig != nil && chain.ForkConfig.BlockNumber > 0 {

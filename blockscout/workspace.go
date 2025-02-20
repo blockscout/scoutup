@@ -58,21 +58,17 @@ func CleanupGlobalWorkspace(log log.Logger) error {
 	return nil
 }
 
-func createInstanceWorkspace(globalWorkspace string, genesisJSON *[]byte) (string, error) {
+func createInstanceWorkspace(globalWorkspace string, genesisJSON []byte) (string, error) {
 	workspace, err := os.MkdirTemp(globalWorkspace, "instance")
 	if err != nil {
 		return "", err
-	}
-
-	if genesisJSON == nil {
-		genesisJSON = &[]byte{}
 	}
 
 	files := map[string][]byte{
 		"docker-compose.yml":    dockerComposeYml,
 		"common-blockscout.env": commonBlockscoutEnv,
 		"common-frontend.env":   commonFrontendEnv,
-		"genesis.json":          *genesisJSON,
+		"genesis.json":          genesisJSON,
 	}
 
 	for name, content := range files {

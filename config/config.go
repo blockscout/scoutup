@@ -38,15 +38,14 @@ func (b *BlockscoutConfig) BackendEnvs() map[string]string {
 	envs["FIRST_BLOCK"] = fmt.Sprintf("%d", b.FirstBlock)
 	envs["DATABASE_URL"] = fmt.Sprintf(
 		"postgresql://blockscout:ceWb1MeLBEeOIfk65gU8EjF8@host.docker.internal:%v/blockscout", b.PostgresPort)
+	envs["CHAIN_SPEC_PATH"] = "/app/genesis.json"
+	envs["CHAIN_SPEC_PROCESSING_DELAY"] = "0s"
+
 	if b.OPConfig != nil {
 		envs["INDEXER_OPTIMISM_L1_RPC"] = b.OPConfig.L1RPCUrl
 		envs["INDEXER_OPTIMISM_L1_SYSTEM_CONFIG_CONTRACT"] = b.OPConfig.L1SystemConfigContract
 		envs["INDEXER_OPTIMISM_L2_BATCH_GENESIS_BLOCK_NUMBER"] = "0"
 		envs["INDEXER_OPTIMISM_L2_HOLOCENE_TIMESTAMP"] = "0"
-	}
-	if b.GenesisJSON != nil {
-		envs["CHAIN_SPEC_PATH"] = "/app/genesis.json"
-		envs["CHAIN_SPEC_PROCESSING_DELAY"] = "0s"
 	}
 	return envs
 }
