@@ -9,6 +9,7 @@ import (
 
 type InstanceConfig struct {
 	DockerRepo   string
+	DockerTag    string
 	FrontendPort uint64
 	BackendPort  uint64
 	PostgresPort uint64
@@ -24,6 +25,7 @@ type BlockscoutConfig struct {
 func (b *BlockscoutConfig) DockerComposeEnvs() []string {
 	return []string{
 		fmt.Sprintf("DOCKER_REPO=%s", b.DockerRepo),
+		fmt.Sprintf("DOCKER_TAG=%s", b.DockerTag),
 		fmt.Sprintf("FRONTEND_PORT=%d", b.FrontendPort),
 		fmt.Sprintf("BACKEND_PORT=%d", b.BackendPort),
 		fmt.Sprintf("POSTGRES_PORT=%d", b.PostgresPort),

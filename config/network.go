@@ -23,6 +23,7 @@ func (n *NetworkConfig) PrepareBlockscoutConfigs() []*BlockscoutConfig {
 				BackendPort:  backendPort,
 				PostgresPort: postgresPort,
 				DockerRepo:   chain.dockerRepo(),
+				DockerTag:    chain.dockerTag(),
 			},
 		}
 
