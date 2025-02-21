@@ -29,7 +29,7 @@ $ go build
 
 1. Run `supersim`:
    ```
-   supersim --l1.host 0.0.0.0 --l2.host 0.0.0.0 --interop.autorelay true
+   supersim --interop.autorelay true
    ```
 2. Run local explorers for all `supersim` chains:
    ```
