@@ -28,3 +28,10 @@ func (n *ChainConfig) dockerTag() string {
 	}
 	return "7.0.0"
 }
+
+func (n *ChainConfig) frontendDockerTag() string {
+	if n.OPConfig != nil {
+		return "interop"
+	}
+	return "v1.37.4"
+}

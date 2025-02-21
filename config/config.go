@@ -8,11 +8,12 @@ import (
 )
 
 type InstanceConfig struct {
-	DockerRepo   string
-	DockerTag    string
-	FrontendPort uint64
-	BackendPort  uint64
-	PostgresPort uint64
+	DockerRepo        string
+	DockerTag         string
+	FrontendDockerTag string
+	FrontendPort      uint64
+	BackendPort       uint64
+	PostgresPort      uint64
 }
 
 type BlockscoutConfig struct {
@@ -26,6 +27,7 @@ func (b *BlockscoutConfig) DockerComposeEnvs() []string {
 	return []string{
 		fmt.Sprintf("DOCKER_REPO=%s", b.DockerRepo),
 		fmt.Sprintf("DOCKER_TAG=%s", b.DockerTag),
+		fmt.Sprintf("FRONTEND_DOCKER_TAG=%s", b.FrontendDockerTag),
 		fmt.Sprintf("FRONTEND_PORT=%d", b.FrontendPort),
 		fmt.Sprintf("BACKEND_PORT=%d", b.BackendPort),
 		fmt.Sprintf("POSTGRES_PORT=%d", b.PostgresPort),
@@ -73,6 +75,9 @@ func (b *BlockscoutConfig) FrontendEnvs() map[string]string {
 		envs["NEXT_PUBLIC_ROLLUP_L1_BASE_URL"] = b.OPConfig.L1BlockscoutURL
 		// TODO: what is the correct value here?
 		envs["NEXT_PUBLIC_ROLLUP_L2_WITHDRAWAL_URL"] = "https://app.optimism.io/bridge/withdraw"
+
+		// interop image related envs
+		envs["NEXT_PUBLIC_INTEROP_ENABLED"] = "true"
 	}
 
 	return envs
