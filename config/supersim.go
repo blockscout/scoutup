@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+
 	ssconfig "github.com/ethereum-optimism/supersim/config"
 	"github.com/ethereum/go-ethereum/rpc"
 )
