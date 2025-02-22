@@ -17,15 +17,15 @@ $ go build
 
 ### When using Supersim
 0. **Important:** For predeployed contracts to be indexed correctly, 
-   ensure you have anvil (foundry) installed with a commit later or equal to [e5ec47b](https://github.com/foundry-rs/foundry/commit/e5ec47b88208fdc48575359e0a5c44f85570ef63).
-   Currently, latest stable release does not contain the commit. You can set it up by running either:
+   ensure you have anvil (foundry) version which contains [e5ec47b](https://github.com/foundry-rs/foundry/commit/e5ec47b88208fdc48575359e0a5c44f85570ef63) commit.
+   Currently, latest stable release does not contain the commit.  You can set it up by running either:
     ```
     foundryup --commit e5ec47b
     ```
-   or (to install the latest master)
-    ```
-   foundryup --branch master
-    ```
+   or (the better way) just install latest nightly release
+   ```
+   foundryup --install nightly
+   ```
 
 1. Run `supersim`:
    ```
@@ -56,3 +56,11 @@ anvil --host 0.0.0.0
 ```
 ./scoutup clean
 ```
+
+### Troubleshooting
+1. **Q:** When running with `l2.count > 2`, sending interoperable tokens results in the following error on the recipient node:
+      
+   `failed to fetch interop start: Insufficient funds for gas * price + value`
+   
+   **A:** There is an issue with older versions of anvil.
+      Make sure that you have installed at least the "[nightly (2025-02-17)](https://github.com/foundry-rs/foundry/releases/tag/nightly-51b75c83045a963a48f9cd8d765e0f2e775acb3e)"
