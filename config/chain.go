@@ -24,7 +24,7 @@ func (n *ChainConfig) dockerRepo() string {
 
 func (n *ChainConfig) dockerTag() string {
 	if n.OPConfig != nil {
-		return "7.0.0-postrelease-344276dd"
+		return "7.0.0-postrelease-bac46e76"
 	}
 	return "7.0.0"
 }
